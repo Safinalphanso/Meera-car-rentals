@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState } from "react";
 import CarCard from "../../components/CarCard";
 import { MapPin, Calendar, Clock, ArrowRight, Car } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -9,7 +9,33 @@ import {
   calculateAirportCost,
 } from "~/utils/priceCalculater";
 
-const carsData = [
+interface CarData {
+  id: number;
+  name: string;
+  image: string;
+  duration: string;
+  passengers: number;
+  distance: number;
+  vehicleType: string;
+  inclusions: string[];
+  exclusions: string[];
+  airport: boolean;
+  price?: number;
+}
+
+interface BookingDetails {
+  type: string;
+  pickup: string;
+  dropoff: string;
+  pickupDate: string;
+  pickupTime: string;
+  dropDate: string;
+  dropTime: string;
+  distance: string;
+  eta: string;
+}
+
+const carsData: CarData[] = [
   {
     id: 1,
     name: "Swift Dzire",
@@ -84,7 +110,7 @@ const carsData = [
   },
 ];
 
-const formatDate = (dateStr) => {
+const formatDate = (dateStr: string): string => {
   if (!dateStr) return "";
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-IN", {
@@ -94,8 +120,8 @@ const formatDate = (dateStr) => {
   });
 };
 
-const calculateDaysDifference = (pickupDate, dropDate) => {
-  if (!pickupDate || !dropDate) return 1; // Fallback to 1 day if dates are missing
+const calculateDaysDifference = (pickupDate: string, dropDate: string): number => {
+  if (!pickupDate || !dropDate) return 1;
 
   const pickup = new Date(pickupDate);
   const drop = new Date(dropDate);
@@ -104,17 +130,17 @@ const calculateDaysDifference = (pickupDate, dropDate) => {
   return Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
 };
 
-const formatTime = (timeStr) => {
+const formatTime = (timeStr: string): string => {
   if (!timeStr) return "";
   const [hours, minutes] = timeStr.split(":");
-  const period = hours >= 12 ? "PM" : "AM";
-  const hour12 = hours % 12 || 12;
+  const period = parseInt(hours) >= 12 ? "PM" : "AM";
+  const hour12 = parseInt(hours) % 12 || 12;
   return `${hour12}:${minutes} ${period}`;
 };
 
-const RidesPage = () => {
+const RidesPage: React.FC = () => {
   const searchParams = useSearchParams();
-  const [bookingDetails, setBookingDetails] = useState({
+  const [bookingDetails, setBookingDetails] = useState<BookingDetails>({
     type: "",
     pickup: "",
     dropoff: "",
@@ -126,10 +152,10 @@ const RidesPage = () => {
     eta: "",
   });
 
-  const [carsWithPrices, setCarsWithPrices] = useState([]);
+  const [carsWithPrices, setCarsWithPrices] = useState<CarData[]>([]);
 
   useEffect(() => {
-    const newBookingDetails = {
+    const newBookingDetails: BookingDetails = {
       type: searchParams.get("type") || "",
       pickup: searchParams.get("pickup") || "",
       dropoff: searchParams.get("dropoff") || "",
@@ -150,26 +176,28 @@ const RidesPage = () => {
         bookingDetails.dropDate,
       );
 
-      const updatedCars = carsData.map((car) => {
-        const distance = Number(bookingDetails.distance) || 0;
-        let price;
-        
-        switch(bookingDetails.type) {
-          case "Local Transport":
-            price = calculateLocalCost(car.vehicleType);
-            break;
-          case "Airport":
-            price = car.airport ? calculateAirportCost(car.vehicleType) : 0;
-            break;
-          default:
-            price = calculateOutstationCost(car.vehicleType, distance, days);
-        }
+      const updatedCars = carsData
+        .map((car) => {
+          const distance = Number(bookingDetails.distance) || 0;
+          let price: number;
 
-        return {
-          ...car,
-          price: price > 0 ? Math.round(price) : 0,
-        };
-      }).filter(car => car.price > 0);
+          switch (bookingDetails.type) {
+            case "Local Transport":
+              price = calculateLocalCost(car.vehicleType);
+              break;
+            case "Airport":
+              price = car.airport ? calculateAirportCost(car.vehicleType) : 0;
+              break;
+            default:
+              price = calculateOutstationCost(car.vehicleType, distance, days);
+          }
+
+          return {
+            ...car,
+            price: price > 0 ? Math.round(price) : 0,
+          };
+        })
+        .filter((car) => car.price > 0);
 
       setCarsWithPrices(updatedCars);
     }
@@ -177,13 +205,13 @@ const RidesPage = () => {
 
   return (
     <div
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundSize: "30px 30px",
-          }}
-          className="min-h-screen bg-gray-50 p-8 pt-24" // Add pt-24 or adjust based on header height
-        > 
-         <div className="mx-auto max-w-6xl">
+      style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+        backgroundSize: "30px 30px",
+      }}
+      className="min-h-screen bg-gray-50 p-8 pt-24"
+    >
+      <div className="mx-auto max-w-6xl">
         <div className="mb-6 rounded-lg bg-white shadow-sm">
           <div className="rounded-t-lg bg-black px-6 py-4">
             <div className="flex items-center gap-3">
@@ -263,7 +291,7 @@ const RidesPage = () => {
           ))}
         </div>
       </div>
-      </div>
+    </div>
   );
 };
 
