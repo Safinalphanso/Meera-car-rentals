@@ -16,12 +16,12 @@ interface CarCardProps {
   image: string;
   duration: string;
   passengers: number;
-  distance: number;
+  distance: string;  // Changed from number to string
   vehicleType: string;
   inclusions: string[];
   exclusions: string[];
   airport: boolean;
-  price: number; // Make price required and always a number
+  price: number;
 }
 
 // Base car data interface without price
@@ -38,6 +38,7 @@ interface CarData {
   airport: boolean;
 }
 
+// Add the BookingDetails interface
 interface BookingDetails {
   type: string;
   pickup: string;
@@ -49,6 +50,7 @@ interface BookingDetails {
   distance: string;
   eta: string;
 }
+
 
 const carsData: CarData[] = [
   {
@@ -177,7 +179,7 @@ const RidesPage: React.FC = () => {
     eta: "",
   });
 
-  const [carsWithPrices, setCarsWithPrices] = useState<CarCardProps[]>([]); // Update state type to CarCardProps
+  const [carsWithPrices, setCarsWithPrices] = useState<CarCardProps[]>([]);
 
   useEffect(() => {
     const newBookingDetails: BookingDetails = {
@@ -219,7 +221,8 @@ const RidesPage: React.FC = () => {
 
           return {
             ...car,
-            price: Math.max(Math.round(price), 0), // Ensure price is always a non-negative number
+            distance: distance.toString(), // Convert the number to string to match CarCardProps
+            price: Math.max(Math.round(price), 0),
           };
         })
         .filter((car) => car.price > 0);
