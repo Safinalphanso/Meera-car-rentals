@@ -109,8 +109,13 @@ const AboutPage = () => {
     </div>
   );
 };
+type ValueCardProps = {
+  icon: React.ReactNode; // or specify the exact type if you know it, e.g., JSX.Element
+  title: string;
+  description: string;
+};
 
-const ValueCard = ({ icon, title, description }) => (
+const ValueCard: React.FC<ValueCardProps> = ({ icon, title, description }) => (
   <div className="text-center p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow">
     <div className="text-red-500 mb-4 flex justify-center">{icon}</div>
     <h3 className="text-xl font-semibold mb-3">{title}</h3>
