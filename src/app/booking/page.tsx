@@ -49,6 +49,24 @@ const BookingPage = () => {
     children: React.ReactNode;
     onClose: () => void;
   }
+  
+  interface UpgradeOption {
+    name: string;
+    price: number;
+    image: string;
+    benefits: string[];
+  }
+  
+  const upgradeOptions: UpgradeOption[] = [
+    {
+      name: "Premium Package",
+      price: 1876,
+      image: "/premium-package.jpg",
+      benefits: ["Leather seats", "WiFi", "Premium sound system"]
+    }
+    // Add more options as needed
+  ];
+  
   const Modal = ({ children, onClose }: ModalProps) => {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
