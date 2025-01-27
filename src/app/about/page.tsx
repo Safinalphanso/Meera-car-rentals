@@ -3,7 +3,55 @@ import React from "react";
 import { Shield, Trophy, Users, ThumbsUp } from "lucide-react";
 import Image from "next/image";
 
-const AboutPage = () => {
+// Define interfaces for component props
+interface StatCardProps {
+  number: string;
+  label: string;
+}
+
+interface TeamMemberProps {
+  name: string;
+  position: string;
+  imageSrc: string;
+}
+
+interface ValueCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+const ValueCard: React.FC<ValueCardProps> = ({ icon, title, description }) => (
+  <div className="text-center p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow">
+    <div className="text-red-500 mb-4 flex justify-center">{icon}</div>
+    <h3 className="text-xl font-semibold mb-3">{title}</h3>
+    <p className="text-gray-600">{description}</p>
+  </div>
+);
+
+const StatCard: React.FC<StatCardProps> = ({ number, label }) => (
+  <div>
+    <div className="text-3xl font-bold text-red-500 mb-2">{number}</div>
+    <div className="text-gray-600">{label}</div>
+  </div>
+);
+
+const TeamMember: React.FC<TeamMemberProps> = ({ name, position, imageSrc }) => (
+  <div className="text-center">
+    <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden">
+      <Image
+        src={imageSrc}
+        alt={name}
+        fill
+        className="object-cover"
+      />
+    </div>
+    <h3 className="text-xl font-semibold mb-1">{name}</h3>
+    <p className="text-gray-600">{position}</p>
+  </div>
+);
+
+const AboutPage: React.FC = () => {
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -13,12 +61,12 @@ const AboutPage = () => {
         </div>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 group">
-            <span className="inline-block">
-              About <span className="text-red-500">Meera Car Rentals</span>
-              <div className="h-0.5 w-0 group-hover:w-full bg-red-500 transition-all duration-300"/>
-            </span>
-          </h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 group">
+              <span className="inline-block">
+                About <span className="text-red-500">Meera Car Rentals</span>
+                <div className="h-0.5 w-0 group-hover:w-full bg-red-500 transition-all duration-300"/>
+              </span>
+            </h1>
             <p className="text-gray-300 text-lg">
               Your trusted partner in premium transportation services since 2010.
               We pride ourselves on reliability, comfort, and exceptional service.
@@ -41,7 +89,7 @@ const AboutPage = () => {
               />
             </div>
             <div>
-            <h2 className="text-3xl font-bold mb-6 group">
+              <h2 className="text-3xl font-bold mb-6 group">
                 <span className="inline-block">
                   Our Story
                   <div className="h-0.5 w-0 group-hover:w-full bg-red-500 transition-all duration-300"/>
@@ -63,12 +111,12 @@ const AboutPage = () => {
 
           {/* Values */}
           <div className="mb-20">
-          <h2 className="text-3xl font-bold text-center mb-12 group">
-            <span className="inline-block">
-              Our Core Values
-              <div className="h-0.5 w-0 group-hover:w-full bg-red-500 transition-all duration-300"/>
-            </span>
-          </h2>
+            <h2 className="text-3xl font-bold text-center mb-12 group">
+              <span className="inline-block">
+                Our Core Values
+                <div className="h-0.5 w-0 group-hover:w-full bg-red-500 transition-all duration-300"/>
+              </span>
+            </h2>
             <div className="grid md:grid-cols-4 gap-8">
               <ValueCard
                 icon={<Shield className="w-8 h-8" />}
@@ -102,47 +150,10 @@ const AboutPage = () => {
               <StatCard number="100%" label="Satisfaction Rate" />
             </div>
           </div>
-
-          
         </div>
       </div>
     </div>
   );
 };
-type ValueCardProps = {
-  icon: React.ReactNode; // or specify the exact type if you know it, e.g., JSX.Element
-  title: string;
-  description: string;
-};
-
-const ValueCard: React.FC<ValueCardProps> = ({ icon, title, description }) => (
-  <div className="text-center p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow">
-    <div className="text-red-500 mb-4 flex justify-center">{icon}</div>
-    <h3 className="text-xl font-semibold mb-3">{title}</h3>
-    <p className="text-gray-600">{description}</p>
-  </div>
-);
-
-const StatCard = ({ number, label }) => (
-  <div>
-    <div className="text-3xl font-bold text-red-500 mb-2">{number}</div>
-    <div className="text-gray-600">{label}</div>
-  </div>
-);
-
-const TeamMember = ({ name, position, imageSrc }) => (
-  <div className="text-center">
-    <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden">
-      <Image
-        src={imageSrc}
-        alt={name}
-        fill
-        className="object-cover"
-      />
-    </div>
-    <h3 className="text-xl font-semibold mb-1">{name}</h3>
-    <p className="text-gray-600">{position}</p>
-  </div>
-);
 
 export default AboutPage;
