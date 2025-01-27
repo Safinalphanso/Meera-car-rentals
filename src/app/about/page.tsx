@@ -20,40 +20,39 @@ interface TeamMemberProps {
   imageSrc: string;
 }
 
-const ValueCard = ({ icon, title, description }: ValueCardProps) => (
+const ValueCard: React.FC<ValueCardProps> = (props) => (
   <div className="text-center p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow">
-    <div className="text-red-500 mb-4 flex justify-center">{icon}</div>
-    <h3 className="text-xl font-semibold mb-3">{title}</h3>
-    <p className="text-gray-600">{description}</p>
+    <div className="text-red-500 mb-4 flex justify-center">{props.icon}</div>
+    <h3 className="text-xl font-semibold mb-3">{props.title}</h3>
+    <p className="text-gray-600">{props.description}</p>
   </div>
 );
 
-const StatCard = ({ number, label }: StatCardProps) => (
+const StatCard: React.FC<StatCardProps> = (props) => (
   <div>
-    <div className="text-3xl font-bold text-red-500 mb-2">{number}</div>
-    <div className="text-gray-600">{label}</div>
+    <div className="text-3xl font-bold text-red-500 mb-2">{props.number}</div>
+    <div className="text-gray-600">{props.label}</div>
   </div>
 );
 
-const TeamMember = ({ name, position, imageSrc }: TeamMemberProps) => (
+const TeamMember: React.FC<TeamMemberProps> = (props) => (
   <div className="text-center">
     <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden">
       <Image
-        src={imageSrc}
-        alt={name}
+        src={props.imageSrc}
+        alt={props.name}
         fill
         className="object-cover"
       />
     </div>
-    <h3 className="text-xl font-semibold mb-1">{name}</h3>
-    <p className="text-gray-600">{position}</p>
+    <h3 className="text-xl font-semibold mb-1">{props.name}</h3>
+    <p className="text-gray-600">{props.position}</p>
   </div>
 );
 
-const AboutPage = () => {
+const AboutPage: React.FC = () => {
   return (
     <div className="bg-white">
-      {/* Rest of the component remains unchanged */}
       {/* Hero Section */}
       <div className="relative bg-black pt-32 pb-20">
         <div className="absolute inset-0 overflow-hidden">
