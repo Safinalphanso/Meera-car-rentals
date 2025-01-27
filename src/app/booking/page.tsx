@@ -25,7 +25,7 @@ interface UpgradeOption {
 }
 
 // Modal component with proper type annotations
-const Modal = ({ children, onClose }: ModalProps): JSX.Element => {
+const Modal = ({children, onClose}: ModalProps): JSX.Element => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white">
