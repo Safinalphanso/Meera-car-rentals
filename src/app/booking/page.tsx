@@ -61,7 +61,8 @@ const upgradeOptions: UpgradeOption[] = [
   }
 ];
 
-const Modal = ({ children, onClose }: ModalProps) => {
+// Fixed Modal component with explicit type annotation
+const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white">
