@@ -110,7 +110,7 @@ const carsData: CarData[] = [
   },
 ];
 
-const formatDate = (dateStr: string): string => {
+const formatDate = (dateStr: string | null): string => {
   if (!dateStr) return "";
   const date = new Date(dateStr);
   return date.toLocaleDateString("en-IN", {
@@ -120,7 +120,7 @@ const formatDate = (dateStr: string): string => {
   });
 };
 
-const calculateDaysDifference = (pickupDate: string, dropDate: string): number => {
+const calculateDaysDifference = (pickupDate: string | null, dropDate: string | null): number => {
   if (!pickupDate || !dropDate) return 1;
 
   const pickup = new Date(pickupDate);
@@ -130,11 +130,18 @@ const calculateDaysDifference = (pickupDate: string, dropDate: string): number =
   return Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
 };
 
-const formatTime = (timeStr: string): string => {
+const formatTime = (timeStr: string | null): string => {
   if (!timeStr) return "";
-  const [hours, minutes] = timeStr.split(":");
-  const period = parseInt(hours) >= 12 ? "PM" : "AM";
-  const hour12 = parseInt(hours) % 12 || 12;
+  
+  const timeParts = timeStr.split(":");
+  if (timeParts.length !== 2) return "";
+  
+  const hours = parseInt(timeParts[0] || "0");
+  const minutes = timeParts[1] || "00";
+  
+  const period = hours >= 12 ? "PM" : "AM";
+  const hour12 = hours % 12 || 12;
+  
   return `${hour12}:${minutes} ${period}`;
 };
 
@@ -156,15 +163,15 @@ const RidesPage: React.FC = () => {
 
   useEffect(() => {
     const newBookingDetails: BookingDetails = {
-      type: searchParams.get("type") || "",
-      pickup: searchParams.get("pickup") || "",
-      dropoff: searchParams.get("dropoff") || "",
-      pickupDate: searchParams.get("pickupDate") || "",
-      pickupTime: searchParams.get("pickupTime") || "",
-      dropDate: searchParams.get("dropDate") || "",
-      dropTime: searchParams.get("dropTime") || "",
-      distance: searchParams.get("distance") || "",
-      eta: searchParams.get("eta") || "",
+      type: searchParams.get("type") ?? "",
+      pickup: searchParams.get("pickup") ?? "",
+      dropoff: searchParams.get("dropoff") ?? "",
+      pickupDate: searchParams.get("pickupDate") ?? "",
+      pickupTime: searchParams.get("pickupTime") ?? "",
+      dropDate: searchParams.get("dropDate") ?? "",
+      dropTime: searchParams.get("dropTime") ?? "",
+      distance: searchParams.get("distance") ?? "",
+      eta: searchParams.get("eta") ?? "",
     };
     setBookingDetails(newBookingDetails);
   }, [searchParams]);
