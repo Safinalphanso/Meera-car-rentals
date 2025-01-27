@@ -1,5 +1,5 @@
 "use client";
-import { useState, ReactNode } from "react";
+import { useState } from "react";
 import {
   MapPin,
   Calendar,
@@ -10,8 +10,9 @@ import {
   X,
 } from "lucide-react";
 import useRideBookingStore from "../../store";
+import { ReactNode } from "react"; // Add this import
 
-// Type definitions
+// Define interfaces at the top level
 interface ModalProps {
   children: ReactNode;
   onClose: () => void;
@@ -24,8 +25,17 @@ interface UpgradeOption {
   benefits: string[];
 }
 
-// Modal component with proper type annotations
-const Modal = ({children, onClose}: ModalProps): JSX.Element => {
+const upgradeOptions: UpgradeOption[] = [
+  {
+    name: "Premium Package",
+    price: 1876,
+    image: "/premium-package.jpg",
+    benefits: ["Leather seats", "WiFi", "Premium sound system"]
+  }
+];
+
+// Fix the Modal component with explicit type annotations
+const Modal = ({ children, onClose }: ModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white">
@@ -46,18 +56,8 @@ const Modal = ({children, onClose}: ModalProps): JSX.Element => {
   );
 };
 
-// Constants
-const upgradeOptions: UpgradeOption[] = [
-  {
-    name: "Premium Package",
-    price: 1876,
-    image: "/premium-package.jpg",
-    benefits: ["Leather seats", "WiFi", "Premium sound system"]
-  }
-];
-
-// Main component
-const BookingPage = (): JSX.Element => {
+const BookingPage = () => {
+const BookingPage = () => {
   const [showUpgradeBar, setShowUpgradeBar] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const { selectedCar, locations, dates } = useRideBookingStore();
@@ -100,7 +100,7 @@ const BookingPage = (): JSX.Element => {
       }}
       className="min-h-screen bg-gray-50 p-8"
     >
-      {showUpgradeModal && (
+       {showUpgradeModal && (
         <Modal onClose={() => setShowUpgradeModal(false)}>
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {upgradeOptions.map((option, index) => (
@@ -137,6 +137,7 @@ const BookingPage = (): JSX.Element => {
           </div>
         </Modal>
       )}
+
       {showUpgradeBar && (
         <div className="fixed left-0 right-0 top-0 z-40 flex items-center justify-between bg-red-600 px-4 py-3 text-white">
           <div className="flex items-center gap-2">
@@ -349,4 +350,6 @@ const BookingPage = (): JSX.Element => {
     </div>
   );
 };
+};
+
 export default BookingPage;
