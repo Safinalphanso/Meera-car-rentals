@@ -9,13 +9,25 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import useRideBookingStore from "../store";
-import LocationInput from "./LocationInput"; // Assuming LocationInput is in a separate file
-import { v4 as uuidv4 } from "uuid"; // For generating UUIDs
+import LocationInput from "./LocationInput";
+import { v4 as uuidv4 } from "uuid";
 
-const TimeSelect = ({ value, onChange, error, className }) => {
+interface TimeSelectProps {
+  value: string;
+  onChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  error?: string;
+  className?: string;
+}
+
+interface TimeSlot {
+  value: string;
+  label: string;
+}
+
+const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error, className }) => {
   // Generate time slots in 30-minute intervals
-  const generateTimeSlots = () => {
-    const slots = [];
+  const generateTimeSlots = (): TimeSlot[] => {
+    const slots: TimeSlot[] = [];
     for (let hour = 0; hour < 24; hour++) {
       for (let minute of ["00", "30"]) {
         const time = `${hour.toString().padStart(2, "0")}:${minute}`;
@@ -38,7 +50,7 @@ const TimeSelect = ({ value, onChange, error, className }) => {
         onChange={onChange}
         className={`w-full appearance-none rounded-lg border bg-white p-2.5 pl-11 pr-10 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
           error ? "border-red-300" : "border-gray-200"
-        } ${className}`}
+        } ${className || ""}`}
       >
         <option value="">Select Time</option>
         {generateTimeSlots().map(({ value, label }) => (
@@ -53,10 +65,19 @@ const TimeSelect = ({ value, onChange, error, className }) => {
   );
 };
 
+interface Errors {
+  pickup?: string;
+  dropoff?: string;
+  pickupDate?: string;
+  pickupTime?: string;
+  dropDate?: string;
+  dropTime?: string;
+  general?: string;
+}
+
 const RideBookingForm: React.FC = () => {
   const router = useRouter();
 
-  // Get state and actions from the Zustand store
   const {
     activeTab,
     locations,
@@ -71,7 +92,7 @@ const RideBookingForm: React.FC = () => {
     updateLocation,
     setDates,
   } = useRideBookingStore();
-  console.log(dates);
+
   const validateForm = () => {
     const newErrors: Errors = {};
 
@@ -114,7 +135,6 @@ const RideBookingForm: React.FC = () => {
         setSubmitting(true);
 
         try {
-          // Extract pickup and dropoff coordinates from suggestions
           const pickupCoords = locations.pickupSuggestion?.geometry?.location;
           const dropoffCoords = locations.dropoffSuggestion?.geometry?.location;
 
@@ -122,7 +142,6 @@ const RideBookingForm: React.FC = () => {
             throw new Error("Invalid pickup or dropoff coordinates");
           }
 
-          // Prepare the request payload
           const origins = `${pickupCoords.lat},${pickupCoords.lng}`;
           const destinations = `${dropoffCoords.lat},${dropoffCoords.lng}`;
 
@@ -139,18 +158,15 @@ const RideBookingForm: React.FC = () => {
 
           const data = await response.json();
 
-          // Check if the API response is successful
           if (
             data.status === "SUCCESS" &&
             data.rows?.[0]?.elements?.[0]?.status === "OK"
           ) {
             const { distance, duration } = data.rows[0].elements[0];
 
-            // Store distance and ETA in the Zustand store
             setDistance(distance);
             setEta(duration);
 
-            // Navigate to the next page or show a confirmation
             const queryParams = new URLSearchParams({
               type: activeTab,
               pickup: locations.pickup,
@@ -162,7 +178,7 @@ const RideBookingForm: React.FC = () => {
               distance: (parseInt(distance) / 1000).toString(),
               eta: duration.toString(),
             }).toString();
-              console.log("The distance is",distance);
+
             router.push(`/rides?${queryParams}`);
           } else {
             throw new Error("Failed to calculate distance and ETA");
@@ -191,6 +207,7 @@ const RideBookingForm: React.FC = () => {
       router.push(`/rides?${queryParams}`);
     }
   };
+
   return (
     <div className="relative w-full overflow-hidden rounded-xl bg-white shadow-lg">
       <div className="p-6">
@@ -267,13 +284,11 @@ const RideBookingForm: React.FC = () => {
                 }`}
                 value={dates.pickupDate || ""}
                 onChange={(e) => {
-                  console.log("pickupDate onChange:", e.target.value); // Debugging
                   const newDates = {
-                    ...dates, // Use the current `dates` state
+                    ...dates,
                     pickupDate: e.target.value,
                   };
-                  console.log("Calling setDates with:", newDates); // Debugging
-                  setDates(newDates); // Pass the new state object
+                  setDates(newDates);
                 }}
                 min={new Date().toISOString().split("T")[0]}
               />
@@ -310,10 +325,10 @@ const RideBookingForm: React.FC = () => {
                   value={dates.dropDate || ""}
                   onChange={(e) => {
                     const newDates = {
-                      ...dates, // Use the current `dates` state
+                      ...dates,
                       dropDate: e.target.value,
                     };
-                    setDates(newDates); // Pass the new state object
+                    setDates(newDates);
                   }}
                   min={dates.dropDate || new Date().toISOString().split("T")[0]}
                 />
@@ -334,6 +349,7 @@ const RideBookingForm: React.FC = () => {
               />
             </div>
           )}
+
           <button
             type="submit"
             disabled={submitting}
