@@ -61,8 +61,8 @@ const upgradeOptions: UpgradeOption[] = [
   }
 ];
 
-// Fixed Modal component with explicit type annotation
-const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
+// Fixed Modal component by explicitly typing the destructured props
+const Modal = ({ children, onClose }: ModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
       <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white">
@@ -320,7 +320,7 @@ const BookingPage = () => {
                     <p className="mb-2 text-gray-600">Estimated Distance</p>
                     <p className="text-xl font-bold text-gray-800">
                       {selectedCar.distance} Kms
-                    </p>
+                      </p>
                   </div>
                   <div className="rounded-xl bg-gradient-to-br from-red-50 to-gray-50 p-6">
                     <p className="mb-2 text-gray-600">Duration</p>
