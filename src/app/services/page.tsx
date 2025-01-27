@@ -3,6 +3,33 @@ import React from "react";
 import Image from "next/image";
 import { Car, Plane, Building, Calendar, Star, Clock, Shield } from "lucide-react";
 
+// Define interfaces for component props
+interface ServiceCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  features: string[];
+}
+
+interface CarCardProps {
+  name: string;
+  image: string;
+  features: string[];
+  price: string;
+}
+
+interface FeatureCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
+interface BenefitCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
 const ServicesPage = () => {
   return (
     <div className="bg-white">
@@ -13,12 +40,12 @@ const ServicesPage = () => {
         </div>
         <div className="container mx-auto px-4">
           <div className="text-center max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 group">
-            <span className="inline-block">
-              About <span className="text-red-500">Meera Car Rentals</span>
-              <div className="h-0.5 w-0 group-hover:w-full bg-red-500 transition-all duration-300"/>
-            </span>
-          </h1>
+            <h1 className="text-4xl md:text-5xl font-bold text-white mb-6 group">
+              <span className="inline-block">
+                About <span className="text-red-500">Meera Car Rentals</span>
+                <div className="h-0.5 w-0 group-hover:w-full bg-red-500 transition-all duration-300"/>
+              </span>
+            </h1>
             <p className="text-gray-300 text-lg">
               From airport transfers to multi-day rentals, we offer comprehensive
               transportation solutions tailored to your needs.
@@ -92,23 +119,6 @@ const ServicesPage = () => {
             </div>
           </div>
 
-          {/* Additional Services
-          <div className="mb-20">
-            <h2 className="text-3xl font-bold text-center mb-12">Additional Services</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <FeatureCard
-                icon={<Calendar className="w-6 h-6" />}
-                title="Corporate Travel"
-                description="Specialized services for business travelers with corporate billing options"
-              />
-              <FeatureCard
-                icon={<Star className="w-6 h-6" />}
-                title="Event Transportation"
-                description="Reliable transportation for weddings, parties, and special occasions"
-              />
-            </div>
-          </div> */}
-
           {/* Why Choose Us */}
           <div className="bg-gray-50 rounded-2xl p-8">
             <h2 className="text-3xl font-bold text-center mb-8">Why Choose Us</h2>
@@ -136,7 +146,7 @@ const ServicesPage = () => {
   );
 };
 
-const ServiceCard = ({ icon, title, description, features }) => (
+const ServiceCard: React.FC<ServiceCardProps> = ({ icon, title, description, features }) => (
   <div className="p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow">
     <div className="text-red-500 mb-4">{icon}</div>
     <h3 className="text-xl font-semibold mb-3">{title}</h3>
@@ -152,7 +162,7 @@ const ServiceCard = ({ icon, title, description, features }) => (
   </div>
 );
 
-const CarCard = ({ name, image, features, price }) => (
+const CarCard: React.FC<CarCardProps> = ({ name, image, features, price }) => (
   <div className="rounded-xl overflow-hidden bg-white shadow-lg hover:shadow-xl transition-shadow">
     <div className="relative h-48">
       <Image
@@ -177,7 +187,7 @@ const CarCard = ({ name, image, features, price }) => (
   </div>
 );
 
-const FeatureCard = ({ icon, title, description }) => (
+const FeatureCard: React.FC<FeatureCardProps> = ({ icon, title, description }) => (
   <div className="flex items-start space-x-4 p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow">
     <div className="text-red-500">{icon}</div>
     <div>
@@ -187,7 +197,7 @@ const FeatureCard = ({ icon, title, description }) => (
   </div>
 );
 
-const BenefitCard = ({ icon, title, description }) => (
+const BenefitCard: React.FC<BenefitCardProps> = ({ icon, title, description }) => (
   <div className="text-center p-6">
     <div className="text-red-500 mb-4 flex justify-center">{icon}</div>
     <h3 className="text-lg font-semibold mb-2">{title}</h3>
