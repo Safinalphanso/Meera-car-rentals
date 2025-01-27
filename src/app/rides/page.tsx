@@ -9,6 +9,22 @@ import {
   calculateAirportCost,
 } from "~/utils/priceCalculater";
 
+// Define the props interface for CarCard component
+interface CarCardProps {
+  id: number;
+  name: string;
+  image: string;
+  duration: string;
+  passengers: number;
+  distance: number;
+  vehicleType: string;
+  inclusions: string[];
+  exclusions: string[];
+  airport: boolean;
+  price: number; // Make price required and always a number
+}
+
+// Base car data interface without price
 interface CarData {
   id: number;
   name: string;
@@ -20,7 +36,6 @@ interface CarData {
   inclusions: string[];
   exclusions: string[];
   airport: boolean;
-  price?: number;
 }
 
 interface BookingDetails {
@@ -133,16 +148,19 @@ const calculateDaysDifference = (pickupDate: string | null, dropDate: string | n
 const formatTime = (timeStr: string | null): string => {
   if (!timeStr) return "";
   
-  const timeParts = timeStr.split(":");
-  if (timeParts.length !== 2) return "";
+  const parts = timeStr.split(":");
+  if (parts.length !== 2) return "";
   
-  const hours = parseInt(timeParts[0] || "0");
-  const minutes = timeParts[1] || "00";
+  const [hoursStr, minutesStr] = parts;
+  if (!hoursStr || !minutesStr) return "";
+  
+  const hours = parseInt(hoursStr, 10);
+  if (isNaN(hours)) return "";
   
   const period = hours >= 12 ? "PM" : "AM";
   const hour12 = hours % 12 || 12;
   
-  return `${hour12}:${minutes} ${period}`;
+  return `${hour12}:${minutesStr} ${period}`;
 };
 
 const RidesPage: React.FC = () => {
@@ -159,7 +177,7 @@ const RidesPage: React.FC = () => {
     eta: "",
   });
 
-  const [carsWithPrices, setCarsWithPrices] = useState<CarData[]>([]);
+  const [carsWithPrices, setCarsWithPrices] = useState<CarCardProps[]>([]); // Update state type to CarCardProps
 
   useEffect(() => {
     const newBookingDetails: BookingDetails = {
@@ -183,8 +201,8 @@ const RidesPage: React.FC = () => {
         bookingDetails.dropDate,
       );
 
-      const updatedCars = carsData
-        .map((car) => {
+      const updatedCars: CarCardProps[] = carsData
+        .map((car): CarCardProps => {
           const distance = Number(bookingDetails.distance) || 0;
           let price: number;
 
@@ -201,7 +219,7 @@ const RidesPage: React.FC = () => {
 
           return {
             ...car,
-            price: price > 0 ? Math.round(price) : 0,
+            price: Math.max(Math.round(price), 0), // Ensure price is always a non-negative number
           };
         })
         .filter((car) => car.price > 0);
