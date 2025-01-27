@@ -15,8 +15,10 @@ interface CarCardProps {
   passengers: number;
   distance: string;
   inclusions: string[];
-  exclusions: string[];
+  exclusions?: string[];
 }
+
+const DEFAULT_EXCLUSIONS = ["Additional usage (if any)", "Toll & Parking"];
 
 const CarCard: FC<CarCardProps> = ({
   id,
@@ -27,12 +29,14 @@ const CarCard: FC<CarCardProps> = ({
   passengers,
   distance,
   inclusions,
-  exclusions = ["Additional usage (if any)", "Toll & Parking", ...exclusions],
+  exclusions = [],
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("inclusions");
   const router = useRouter();
   const { setSelectedCar } = useRideBookingStore();
+
+  const finalExclusions = [...DEFAULT_EXCLUSIONS, ...exclusions];
 
   const handleProceedToBook = () => {
     // Store the selected car in Zustand
@@ -45,7 +49,7 @@ const CarCard: FC<CarCardProps> = ({
       distance,
       duration,
       inclusions,
-      exclusions,
+      exclusions: finalExclusions,
     });
 
     // Navigate to the booking page
@@ -154,7 +158,7 @@ const CarCard: FC<CarCardProps> = ({
                 )}
                 {activeTab === "exclusions" && (
                   <ul className="space-y-2">
-                    {exclusions.map((item, index) => (
+                    {finalExclusions.map((item, index) => (
                       <li key={index} className="flex items-center gap-2">
                         <svg
                           className="h-4 w-4 text-red-500"
