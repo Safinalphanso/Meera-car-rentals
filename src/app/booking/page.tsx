@@ -10,9 +10,9 @@ import {
   X,
 } from "lucide-react";
 import useRideBookingStore from "../../store";
-import { ReactNode } from "react"; // Add this import
+import { ReactNode } from "react";
 
-// Define interfaces at the top level
+// Define interfaces for type safety
 interface ModalProps {
   children: ReactNode;
   onClose: () => void;
@@ -25,6 +25,33 @@ interface UpgradeOption {
   benefits: string[];
 }
 
+interface Car {
+  name: string;
+  price: number;
+  image: string;
+  passengers: number;
+  distance: number;
+  duration: string;
+}
+
+interface BookingLocations {
+  pickup: string;
+  dropoff: string;
+}
+
+interface BookingDates {
+  pickupDate: string;
+  pickupTime: string;
+  dropDate: string;
+  dropTime: string;
+}
+
+interface RideBookingStore {
+  selectedCar: Car | null;
+  locations: BookingLocations;
+  dates: BookingDates;
+}
+
 const upgradeOptions: UpgradeOption[] = [
   {
     name: "Premium Package",
@@ -34,7 +61,6 @@ const upgradeOptions: UpgradeOption[] = [
   }
 ];
 
-// Fix the Modal component with explicit type annotations
 const Modal = ({ children, onClose }: ModalProps) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
@@ -57,10 +83,9 @@ const Modal = ({ children, onClose }: ModalProps) => {
 };
 
 const BookingPage = () => {
-const BookingPage = () => {
   const [showUpgradeBar, setShowUpgradeBar] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-  const { selectedCar, locations, dates } = useRideBookingStore();
+  const { selectedCar, locations, dates } = useRideBookingStore() as RideBookingStore;
 
   if (!selectedCar) {
     return <div>No car selected. Please go back and select a car.</div>;
@@ -69,7 +94,7 @@ const BookingPage = () => {
   const baseFare = selectedCar.price;
   const gst = baseFare * 0.05;
   const totalAmount = baseFare + gst;
-  const bookingNumber = "TKT";
+  const bookingNumber = "TKT" + Math.random().toString(36).substring(2, 8).toUpperCase();
 
   const handleBookingConfirmation = async () => {
     const text = `Booking Confirmed!\nCar: ${selectedCar.name}\nPickup: ${locations.pickup}\nDropoff: ${locations.dropoff}\nPickup Date: ${dates.pickupDate}\nPickup Time: ${dates.pickupTime}\nDrop Date: ${dates.dropDate}\nDrop Time: ${dates.dropTime}\nDistance: ${selectedCar.distance} Kms\nDuration: ${selectedCar.duration}\nTotal Amount: ₹${totalAmount.toLocaleString()}`;
@@ -349,7 +374,6 @@ const BookingPage = () => {
       </div>
     </div>
   );
-};
 };
 
 export default BookingPage;
