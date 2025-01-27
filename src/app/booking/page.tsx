@@ -11,6 +11,48 @@ import {
 } from "lucide-react";
 import useRideBookingStore from "../../store";
 
+interface ModalProps {
+  children: React.ReactNode;
+  onClose: () => void;
+}
+
+interface UpgradeOption {
+  name: string;
+  price: number;
+  image: string;
+  benefits: string[];
+}
+
+const upgradeOptions: UpgradeOption[] = [
+  {
+    name: "Premium Package",
+    price: 1876,
+    image: "/premium-package.jpg",
+    benefits: ["Leather seats", "WiFi", "Premium sound system"]
+  }
+];
+
+const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+      <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white">
+        <div className="p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-2xl font-bold">Upgrade Your Ride</h2>
+            <button
+              onClick={onClose}
+              className="text-gray-500 hover:text-gray-700"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+          {children}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const BookingPage = () => {
   const [showUpgradeBar, setShowUpgradeBar] = useState(true);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -44,48 +86,6 @@ const BookingPage = () => {
       console.error("Error sending booking details:", error);
       alert("An error occurred. Please try again.");
     }
-  };
-  interface ModalProps {
-    children: React.ReactNode;
-    onClose: () => void;
-  }
-  
-  interface UpgradeOption {
-    name: string;
-    price: number;
-    image: string;
-    benefits: string[];
-  }
-  
-  const upgradeOptions: UpgradeOption[] = [
-    {
-      name: "Premium Package",
-      price: 1876,
-      image: "/premium-package.jpg",
-      benefits: ["Leather seats", "WiFi", "Premium sound system"]
-    }
-    // Add more options as needed
-  ];
-  
-  const Modal: React.FC<ModalProps> = ({ children, onClose }) => {
-    return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-        <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-xl bg-white">
-          <div className="p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-2xl font-bold">Upgrade Your Ride</h2>
-              <button
-                onClick={onClose}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
-            {children}
-          </div>
-        </div>
-      </div>
-    );
   };
 
   return (
