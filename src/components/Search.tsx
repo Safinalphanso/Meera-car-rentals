@@ -65,15 +65,9 @@ const TimeSelect: React.FC<TimeSelectProps> = ({ value, onChange, error, classNa
   );
 };
 
-interface Errors {
-  pickup?: string;
-  dropoff?: string;
-  pickupDate?: string;
-  pickupTime?: string;
-  dropDate?: string;
-  dropTime?: string;
-  general?: string;
-}
+type Errors = {
+  [key: string]: string;
+};
 
 const RideBookingForm: React.FC = () => {
   const router = useRouter();
