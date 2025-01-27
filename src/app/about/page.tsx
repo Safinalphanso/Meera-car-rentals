@@ -3,7 +3,12 @@ import React from "react";
 import { Shield, Trophy, Users, ThumbsUp } from "lucide-react";
 import Image from "next/image";
 
-// Define interfaces for component props
+interface ValueCardProps {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}
+
 interface StatCardProps {
   number: string;
   label: string;
@@ -15,13 +20,7 @@ interface TeamMemberProps {
   imageSrc: string;
 }
 
-interface ValueCardProps {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-const ValueCard: React.FC<ValueCardProps> = ({ icon, title, description }) => (
+const ValueCard = ({ icon, title, description }: ValueCardProps) => (
   <div className="text-center p-6 rounded-xl bg-white shadow-lg hover:shadow-xl transition-shadow">
     <div className="text-red-500 mb-4 flex justify-center">{icon}</div>
     <h3 className="text-xl font-semibold mb-3">{title}</h3>
@@ -29,14 +28,14 @@ const ValueCard: React.FC<ValueCardProps> = ({ icon, title, description }) => (
   </div>
 );
 
-const StatCard: React.FC<StatCardProps> = ({ number, label }) => (
+const StatCard = ({ number, label }: StatCardProps) => (
   <div>
     <div className="text-3xl font-bold text-red-500 mb-2">{number}</div>
     <div className="text-gray-600">{label}</div>
   </div>
 );
 
-const TeamMember: React.FC<TeamMemberProps> = ({ name, position, imageSrc }) => (
+const TeamMember = ({ name, position, imageSrc }: TeamMemberProps) => (
   <div className="text-center">
     <div className="relative w-48 h-48 mx-auto mb-4 rounded-full overflow-hidden">
       <Image
@@ -51,9 +50,10 @@ const TeamMember: React.FC<TeamMemberProps> = ({ name, position, imageSrc }) => 
   </div>
 );
 
-const AboutPage: React.FC = () => {
+const AboutPage = () => {
   return (
     <div className="bg-white">
+      {/* Rest of the component remains unchanged */}
       {/* Hero Section */}
       <div className="relative bg-black pt-32 pb-20">
         <div className="absolute inset-0 overflow-hidden">
