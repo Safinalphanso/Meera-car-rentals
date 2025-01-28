@@ -1,5 +1,8 @@
+// Define the valid vehicle types
+type VehicleType = 'sedan' | 'muv' | 'innova' | 'crysta' | 'hycross' | 'fortuner';
+
 export function calculateOutstationCost(
-  vehicleType: string,
+  vehicleType: VehicleType,
   distance: number,
   days: number,
 ) {
@@ -10,7 +13,7 @@ export function calculateOutstationCost(
     crysta: { perKm: 25, chauffeur: 400, nightAllowance: 300 },
     hycross: { perKm: 35, chauffeur: 400, nightAllowance: 300 },
     fortuner: { perKm: 55, chauffeur: 500, nightAllowance: 400 },
-  };
+  } as const;
 
   const gstRate = 0.05;
   const baseKmPerDay = 300;
@@ -27,7 +30,10 @@ export function calculateOutstationCost(
   return totalCost;
 }
 
-export function calculateAirportCost(vehicleType) {
+// Update the other functions to use the VehicleType type
+type AirportVehicleType = 'sedan' | 'muv' | 'innova' | 'crysta';
+
+export function calculateAirportCost(vehicleType: AirportVehicleType) {
   let hours = 40;
   let distance = 4;
   const rateCard = {
@@ -61,7 +67,7 @@ export function calculateAirportCost(vehicleType) {
         extraHr: 250,
       },
     },
-  };
+  } as const;
 
   const gstRate = 0.05;
   const airportPackage = rateCard.airport[vehicleType];
@@ -78,7 +84,7 @@ export function calculateAirportCost(vehicleType) {
   return totalCost;
 }
 
-export function calculateLocalCost(vehicleType) {
+export function calculateLocalCost(vehicleType: VehicleType) {
   let hours = 80;
   let distance = 8;
   const rateCard = {
@@ -126,7 +132,7 @@ export function calculateLocalCost(vehicleType) {
         extraHr: 555,
       },
     },
-  };
+  } as const;
 
   const gstRate = 0.05;
   const localPackage = rateCard.local[vehicleType];
