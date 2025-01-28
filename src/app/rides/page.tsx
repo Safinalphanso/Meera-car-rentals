@@ -9,6 +9,8 @@ import {
   calculateAirportCost,
 } from "../../utils/priceCalculater";
 
+type VehicleType = 'sedan' | 'muv' | 'innova' | 'crysta' | 'hycross' | 'fortuner';
+type AirportVehicleType = 'sedan' | 'muv' | 'innova' | 'crysta';
 // Define the props interface for CarCard component
 interface CarCardProps {
   id: number;
@@ -16,13 +18,14 @@ interface CarCardProps {
   image: string;
   duration: string;
   passengers: number;
-  distance: string;  // Changed from number to string
-  vehicleType: string;
+  distance: string;
+  vehicleType: VehicleType;
   inclusions: string[];
   exclusions: string[];
   airport: boolean;
   price: number;
 }
+
 
 // Base car data interface without price
 interface CarData {
@@ -32,7 +35,7 @@ interface CarData {
   duration: string;
   passengers: number;
   distance: number;
-  vehicleType: string;
+  vehicleType: VehicleType;
   inclusions: string[];
   exclusions: string[];
   airport: boolean;
@@ -137,6 +140,7 @@ const formatDate = (dateStr: string | null): string => {
   });
 };
 
+
 const calculateDaysDifference = (pickupDate: string | null, dropDate: string | null): number => {
   if (!pickupDate || !dropDate) return 1;
 
@@ -196,6 +200,7 @@ const RidesPage: React.FC = () => {
     setBookingDetails(newBookingDetails);
   }, [searchParams]);
 
+  
   useEffect(() => {
     if (bookingDetails.type) {
       const days = calculateDaysDifference(
@@ -213,7 +218,11 @@ const RidesPage: React.FC = () => {
               price = calculateLocalCost(car.vehicleType);
               break;
             case "Airport":
-              price = car.airport ? calculateAirportCost(car.vehicleType) : 0;
+              if (car.airport && isAirportVehicle(car.vehicleType)) {
+                price = calculateAirportCost(car.vehicleType);
+              } else {
+                price = 0;
+              }
               break;
             default:
               price = calculateOutstationCost(car.vehicleType, distance, days);
@@ -221,7 +230,7 @@ const RidesPage: React.FC = () => {
 
           return {
             ...car,
-            distance: distance.toString(), // Convert the number to string to match CarCardProps
+            distance: distance.toString(),
             price: Math.max(Math.round(price), 0),
           };
         })
@@ -230,6 +239,11 @@ const RidesPage: React.FC = () => {
       setCarsWithPrices(updatedCars);
     }
   }, [bookingDetails]);
+
+  // Type guard to check if a vehicle type is valid for airport service
+  function isAirportVehicle(vehicleType: VehicleType): vehicleType is AirportVehicleType {
+    return ['sedan', 'muv', 'innova', 'crysta'].includes(vehicleType);
+  }
 
   return (
     <div
