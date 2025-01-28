@@ -97,7 +97,7 @@ const AboutPage: React.FC = () => {
               <p className="text-gray-600 mb-4">
                 Founded in 2010, Meera Car Rentals began with a simple mission: to provide 
                 premium transportation services that exceed expectations. What started with 
-                a small fleet of luxury vehicles has grown into one of Mumbai's most 
+                a small fleet of luxury vehicles has grown into one of Mumbai&apos;s most 
                 trusted car rental services.
               </p>
               <p className="text-gray-600">
