@@ -7,7 +7,7 @@ import {
   calculateOutstationCost,
   calculateLocalCost,
   calculateAirportCost,
-} from "~/utils/priceCalculater";
+} from "../../utils/priceCalculater";
 
 // Define the props interface for CarCard component
 interface CarCardProps {
